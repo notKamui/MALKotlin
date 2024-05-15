@@ -25,6 +25,20 @@ data object MalUnit : MalType<Unit> {
     }
 }
 
+data class MalFunction(
+    val name: MalSymbol,
+    val body: (List<MalType<*>>) -> MalType<*>,
+) : AbstractMalType<MalType<*>>(), MalType<MalType<*>> {
+    override val value: MalType<*> = MalUnit
+    override fun print(printReadability: Boolean): String {
+        return "(fn $name ...)"
+    }
+
+    companion object {
+        fun of(params: String, body: (List<MalType<*>>) -> MalType<*>): MalFunction = MalFunction(MalSymbol(params), body)
+    }
+}
+
 typealias MalCollectionValue = Collection<MalType<*>>
 
 open class MalList(override val value: MalCollectionValue) : AbstractMalType<MalCollectionValue>(),

@@ -14,13 +14,14 @@ fun getInput(step: Int): List<Pair<String, String>> {
     return testFile
         .lines()
         .filter { it.isNotBlank() && !it.startsWith(";;") && !it.startsWith(";>>>") }
-        .chunked(2).also { println(it) }
+        .chunked(2)
         .map { (input, expected) -> input to expected }
+        .also { println(it) }
 }
 
 abstract class StepNTest(step: Int, process: (String) -> String) : StringSpec({
     getInput(step).forEachIndexed { index, (input, expected) ->
-        "test $index ($expected)" {
+        "test $index (input: $input | expected: $expected)" {
             val output = try {
                 process(input)
             } catch (e: Exception) {
